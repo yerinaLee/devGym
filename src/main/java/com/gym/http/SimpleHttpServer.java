@@ -4,7 +4,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class simpleHttpServer {
+public class SimpleHttpServer {
     public static void main(String[] args) throws IOException{
         ServerSocket serverSocket = new ServerSocket(8080); // 서버 포트 열기 - 포트 바인드
         System.out.println("서버 start! http://localhost:8080");
