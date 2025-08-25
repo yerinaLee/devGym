@@ -17,7 +17,7 @@ public class ChatClient {
             try(BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))){
                 String msg;
                 while((msg = in.readLine())!=null){
-                    System.out.println("상대방: " + msg);
+                    System.out.println(msg);
                 }
             } catch (IOException e){
                 e.printStackTrace();
