@@ -75,6 +75,7 @@ public class MultiChatServer {
                 while ((msg = in.readLine()) != null){
                     System.out.println(nickname + ": " + msg);
                     broadcast("상대방(" + nickname + "): " + msg, this);
+                    selfBroadcast("나: " + msg, this);
                 }
             } catch (IOException e){
                 System.out.println("클라이언트 연결 종료: " + socket);
@@ -98,6 +99,11 @@ public class MultiChatServer {
                     }
                 }
             }
+        }
+        
+        // 작성자 자신에게 메시지 전송
+        private  void selfBroadcast(String msg, ClientHandler sender){
+            sender.out.println(msg);
         }
     }
 }
