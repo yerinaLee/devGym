@@ -3,11 +3,11 @@ package com.gym.auth;
 import java.util.HashSet;
 import java.util.Set;
 
-public class XOR {
+public class XOREncrypt {
 
     public static void main(String[] args) {
-        int userNo = 123456;
-        int key = 1_000_123_456; // 10억
+        int userNo = 999890;
+        int key = 2_000_123_456; // 20억
 
         System.out.println("=== 20억 키로 XOR 테스트 ===");
         System.out.printf("userNo: %,d\n", userNo);
