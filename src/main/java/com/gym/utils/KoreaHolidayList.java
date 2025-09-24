@@ -1,5 +1,7 @@
 package com.gym.utils;
 
+import java.io.IOException;
+import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -10,11 +12,25 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import com.gym.utils.HttpSocket;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.dom4j.io.SAXReader;
+import org.json.JSONObject;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
+
+import javax.swing.text.Element;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 public class KoreaHolidayList {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, ParserConfigurationException, SAXException {
         Date date = new Date();
-        getLunarDate(getDateByString(date, "-"));
+        getLunarDate(getDateByString(date));
     }
 
     public static Map<String, String> solarHolidayMap = new HashMap<>();
@@ -53,7 +69,7 @@ public class KoreaHolidayList {
             </items>
         </body>
     </response>*/
-    public static String getLunarDate(String dateStr) throws UnsupportedEncodingException, MalformedURLException {
+    public static String getLunarDate(String dateStr) throws IOException, ParserConfigurationException, SAXException {
         final String serviceKey = "zICFxRCxeKNDk0eZH240WS8zMz0oqxcxx5MzyqcDCG62vDweuJMmeVOa8tsFAYQSARpg2uBfAaJo%2BxauvnvhDw%3D%3D";
         String url = "http://apis.data.go.kr/B090041/openapi/service/LrsrCldInfoService/getLunCalInfo";
         
@@ -68,36 +84,27 @@ public class KoreaHolidayList {
         String month = arr[1];
         String day = arr[2];
 
-        if(Integer.parseInt(month) < 10) month = "0"+ month;
-        if(Integer.parseInt(day) < 10) day = "0"+ day;
+//        if(Integer.parseInt(month) < 10) month = "0"+ month;
+//        if(Integer.parseInt(day) < 10) day = "0"+ day;
 
         url += "?solYear="+year+"&solMonth="+month+"&solDay="+day+"&ServiceKey="+serviceKey;
 
-//        StringBuilder urlBuilder = new StringBuilder(url);
-//        urlBuilder.append("?" + URLEncoder.encode("solYear", "UTF-8") + "=" + URLEncoder)
-
         // URL : 주소 관리하는 객체(연결 등의 작업 진행)
-        URL responseUrl = new URL(url);
-//        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        String out = HttpSocket.getApiRequest(url, null);
+//        JSONObject jsonObject = new JSONObject(out); // 데이터는 JSON이 아닌 XML 형태로 넘어옴
+        
+        // XML 파싱
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document doc = builder.parse(new InputSource(new StringReader(out)));
 
+        System.out.println("doc : " + doc.toString());
 
+        NodeList list = doc.getElementsByTagName("item");
+        String result = list.item(0).getTextContent();
 
-
-
-
-
-
-
-
+        System.out.println("result : " + result); // result : 03병신(丙申)평0829을사(乙巳)을유(乙酉)2025242460943평09수2025
 
         return null;
     }
-
-
-
-
-
-
-
-
 }
